@@ -1,15 +1,16 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
   <head>
     <title>Static Website Template</title>
     <module href="/components/head.html"></module>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js" integrity="sha512-MgkNs0gNdrnOM7k+0L+wgiRc5aLgl74sJQKbIWegVIMvVGPc1+gc1L2oK9Wf/D9pq58eqIJAxOonYPVE5UwUFA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   </head>
+  
+  <body style="background: rgb(0, 0, 0); margin: 0; padding: 0;height:100%; width:100%;">
+    <module href="/components/body.html"></module>
 
-  <body>
-    <!-- WebGL context -->
-    <div id="gl_context"></div>
-
-    <script src="bundle.js" defer async></script>
+    <!-- ⬇️ i'm bundle.js for no framework template, please do not ever delete me! -->
+    <script src="bundle.js" defer async></script> 
   </body>
+
 </html>

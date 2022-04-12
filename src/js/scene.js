@@ -1,14 +1,9 @@
 /* eslint-disable no-unused-vars */
 
-//Three.js
 import * as THREE from 'three';
-
-// import FirstPersonControls from './fpscontrols';
-// FirstPersonControls(THREE);
 import {FirstPersonControls} from 'three/examples/jsm/controls/FirstPersonControls';
-
-// Event emitter implementation for ES6
 import EventEmitter from 'event-emitter-es6';
+import {createEnvironment,updateEnvironment} from './environment';
 
 
 class Scene extends EventEmitter {
@@ -16,10 +11,13 @@ class Scene extends EventEmitter {
               _width = window.innerWidth,
               _height = window.innerHeight,
               hasControls = true,
-              clearColor = 'black'){
+              clearColor = 'white') {
 
     //Since we extend EventEmitter we need to instance it from here
     super();
+
+    // guard against multiple binds
+    this.audioBinded = false;
 
     //THREE scene
     this.scene = new THREE.Scene();
@@ -29,7 +27,16 @@ class Scene extends EventEmitter {
     this.height = _height;
 
     //THREE Camera
-    this.camera = new THREE.PerspectiveCamera(50, this.width / this.height, 0.1, 1000);
+    this.camera = new THREE.PerspectiveCamera(
+      50,
+      this.width / this.height,
+      0.1,
+      5000
+    );
+    this.camera.position.set(0, 5, 80);
+    this.scene.add(this.camera);
+
+    // create an AudioListener and add it to the camera
 
     //THREE WebGL renderer
     this.renderer = new THREE.WebGLRenderer({
@@ -45,7 +52,13 @@ class Scene extends EventEmitter {
 
     if(hasControls){
       this.controls = new FirstPersonControls(this.camera, this.renderer.domElement);
-      this.controls.lookSpeed = 0.05;
+      this.controls.lookSpeed = 0.01;
+      this.controls.movementSpeed = 8;
+      this.controls.activeLook = true;
+      // if(this.controls.mouseDragOn == true){
+      //   this.controls.activeLook = true;
+      // }
+      
     }
 
     //Setup event listeners for events and handle the states
@@ -54,13 +67,27 @@ class Scene extends EventEmitter {
     domElement.addEventListener('mouseleave', e => this.onLeaveCanvas(e), false);
     window.addEventListener('keydown', e => this.onKeyDown(e), false);
 
-    this.helperGrid = new THREE.GridHelper( 10, 10 );
-    this.helperGrid.position.y = -0.5;
-    this.scene.add(this.helperGrid);
+    // Add external media to <audio> tag in HTML
+    document.addEventListener('keydown', (event) => {
+      this.addExternalMedia();
+    });
+
+    document.addEventListener('mousedown', (event) => {
+      this.addExternalMedia();
+    });
+
+
+    
+    // Helpers
+    // this.scene.add(new THREE.GridHelper(1000, 1000));
+    // this.scene.add(new THREE.AxesHelper(10));
+  
     this.clock = new THREE.Clock();
 
+    createEnvironment(this.scene);
+    this.addLights(this.scene);
+    
     this.update();
-
   }
 
   drawUsers(positions, id){
@@ -73,7 +100,41 @@ class Scene extends EventEmitter {
     }
   }
 
+  addLights() {
+    this.scene.add(new THREE.AmbientLight(0xffffe6, 0.9));
+    
+    let dirLight1 = new THREE.DirectionalLight( 0xffffff,0.1 );
+		dirLight1.position.set( -3, 0, 3 ).normalize();
+		this.scene.add( dirLight1 );
+
+    let dirLight2 = new THREE.DirectionalLight( 0xffffff,0.1 );
+		dirLight2.position.set( 10, 0, -10 ).normalize();
+		this.scene.add( dirLight2 );
+
+    let dirLight3 = new THREE.DirectionalLight( 0xffffff,0.1 );
+		dirLight3.position.set( -23, -0.5, -23 ).normalize();
+		this.scene.add( dirLight3 );
+
+    console.log('hey light is on');
+  }
+
+  addExternalMedia(){
+    if(this.audioBinded)
+      return;
+    this.listener = new THREE.AudioListener();
+    this.camera.add(this.listener);
+    let space = new THREE.PositionalAudio( this.listener );
+    let songElement = document.getElementById( 'myAudio' );
+    space.setMediaElementSource( songElement );
+    space.setRefDistance( 1 );
+    songElement.play();
+    this.camera.add(space);
+    this.audioBinded = true;
+  }
+
+
   update(){
+    updateEnvironment();
     requestAnimationFrame(() => this.update());
     this.controls.update(this.clock.getDelta());
     this.controls.target = new THREE.Vector3(0,0,0);
@@ -85,8 +146,9 @@ class Scene extends EventEmitter {
   }
 
   onWindowResize(e) {
+    console.log('resize');
     this.width = window.innerWidth;
-    this.height = Math.floor(window.innerHeight - (window.innerHeight * 0.3));
+    this.height = window.innerHeight;
     this.camera.aspect = this.width / this.height;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(this.width, this.height);
@@ -101,6 +163,7 @@ class Scene extends EventEmitter {
   onKeyDown(e){
     this.emit('userMoved');
   }
+
 }
 
 export default Scene;

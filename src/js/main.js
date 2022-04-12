@@ -1,18 +1,16 @@
-/* eslint-disable no-unused-vars */
-
 import Scene from './scene';
 import * as THREE from 'three';
+
 
 //A socket.io instance
 
 // eslint-disable-next-line
 const socket = io();
-console.log(socket);
-socket.connect('http://localhost:1234');
+
 //One WebGL context to rule them all !
 let glScene = new Scene();
 let id;
-let instances = [];
+// let instances = [];
 let clients = new Object();
 
 glScene.on('userMoved', ()=>{
@@ -43,6 +41,7 @@ socket.on('introduction', (_id, _clientNum, _ids)=>{
 
 });
 
+// eslint-disable-next-line
 socket.on('newUserConnected', (clientCount, _id, _ids)=>{
   console.log(clientCount + ' clients connected');
   let alreadyHasUser = false;
@@ -67,6 +66,7 @@ socket.on('newUserConnected', (clientCount, _id, _ids)=>{
 
 });
 
+// eslint-disable-next-line
 socket.on('userDisconnected', (clientCount, _id, _ids)=>{
   //Update the data from the server
   document.getElementById('numUsers').textContent = clientCount;
