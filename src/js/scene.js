@@ -6,6 +6,7 @@ import EventEmitter from 'event-emitter-es6';
 import {createEnvironment,updateEnvironment} from './environment';
 
 
+let water;
 class Scene extends EventEmitter {
   constructor(domElement = document.getElementById('gl_context'),
               _width = window.innerWidth,
@@ -53,7 +54,7 @@ class Scene extends EventEmitter {
     if(hasControls){
       this.controls = new FirstPersonControls(this.camera, this.renderer.domElement);
       this.controls.lookSpeed = 0.01;
-      this.controls.movementSpeed = 8;
+      this.controls.movementSpeed = 15;
       this.controls.activeLook = true;
       // if(this.controls.mouseDragOn == true){
       //   this.controls.activeLook = true;
@@ -63,9 +64,10 @@ class Scene extends EventEmitter {
 
     //Setup event listeners for events and handle the states
     window.addEventListener('resize', e => this.onWindowResize(e), false);
+    window.addEventListener('keydown', e => this.onKeyDown(e), false);
     domElement.addEventListener('mouseenter', e => this.onEnterCanvas(e), false);
     domElement.addEventListener('mouseleave', e => this.onLeaveCanvas(e), false);
-    window.addEventListener('keydown', e => this.onKeyDown(e), false);
+    
 
     // Add external media to <audio> tag in HTML
     document.addEventListener('keydown', (event) => {
@@ -76,6 +78,14 @@ class Scene extends EventEmitter {
       this.addExternalMedia();
     });
 
+    
+    document.addEventListener('keydown', (event) => {
+      let keyPress = ['w','a','s','d'];
+      if(keyPress.includes(event.key)){
+        console.log(event);
+        this.addWaterSound();
+      } 
+    });
 
     
     // Helpers
@@ -86,6 +96,7 @@ class Scene extends EventEmitter {
 
     createEnvironment(this.scene);
     this.addLights(this.scene);
+    
     
     this.update();
   }
@@ -122,17 +133,29 @@ class Scene extends EventEmitter {
     if(this.audioBinded)
       return;
     this.listener = new THREE.AudioListener();
-    this.camera.add(this.listener);
+    this.scene.add(this.listener);
     let space = new THREE.PositionalAudio( this.listener );
-    let songElement = document.getElementById( 'myAudio' );
+    let songElement = document.getElementById( 'envAudio' );
     space.setMediaElementSource( songElement );
     space.setRefDistance( 1 );
     songElement.play();
-    this.camera.add(space);
+    this.scene.add(space);
     this.audioBinded = true;
   }
 
+  addWaterSound(){
+    this.listener = new THREE.AudioListener();
+    this.scene.add(this.listener);
+    water = new THREE.PositionalAudio( this.listener );
+    let songElement = document.getElementById( 'waterAudio' );
+    water.setMediaElementSource( songElement );
+    water.setRefDistance( 1 );
+    songElement.play();
+    this.scene.add(water);
+  }
 
+
+  //notice: update() includes render()!
   update(){
     updateEnvironment();
     requestAnimationFrame(() => this.update());

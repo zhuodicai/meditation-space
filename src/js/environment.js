@@ -1,7 +1,9 @@
 import * as THREE from 'three';
+import { Water } from 'three/examples/jsm/objects/Water.js';
 
 // let tree;
 let skybox;
+let water;
 
 
 export function createEnvironment(scene) {
@@ -34,9 +36,11 @@ export function createEnvironment(scene) {
   const planeT = new THREE.Mesh(geometryT, materialT);
   planeT.position.set(-120,-8,50);
   scene.add(planeT);
-  // planeT.rotation.x = 181
+  // planeT.rotation.x = 181;
   planeT.rotation.y = -300;
   planeT.rotateX( - Math.PI / 2);
+  // planeT.visible = false;
+  
 
 
   //tree
@@ -93,58 +97,38 @@ export function createEnvironment(scene) {
 
 
   // water
-  const geometryW = new THREE.PlaneBufferGeometry(500,300,64,64);
-  //——————————————————————————————————————————A
-  const loaderW = new THREE.TextureLoader();
-  const heightW = loaderW.load('assets/waternormals.jpeg');
-  const textureW = loaderW.load('assets/watertexture.jpeg');
-  const materialW = new THREE.MeshStandardMaterial({
-  // color:'gray',
-  // color:'rgb(22,24,31)',
-  color:'white',
-  side: THREE.DoubleSide,
-  map: textureW,
-  displacementMap: heightW,
-  displacementScale: 2
-  });
+
+  const waterGeometry = new THREE.PlaneGeometry( 800, 800, 64,64 );
+
+  water = new Water(
+    waterGeometry,
+    {
+      textureWidth: 1000,
+      textureHeight: 1000,
+      waterNormals: new THREE.TextureLoader().load( 'textures/waternormals.jpg', function ( texture ) {
+
+        texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+
+      } ),
+      // sunDirection: new THREE.Vector3(),
+      sunColor: 'white',
+      waterColor: 0x001e0f,
+      // waterColor: 'white',
+      distortionScale: 0,
+      fog: scene.fog !== undefined,
+      size : 0.1
+    }
+  );
+
+  console.log(water.geometry.attributes.position,'im waaaaaaater');
 
   
-
-
-  //——————————————————————————————————————————B
-  // const materialW = new THREE.MeshPhongMaterial( { color: 0xffffff, emissive: 0x444444 } );
-
-  
-  //——————————————————————————————————————————C
-  // const virtualCamera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 1000 );
-  // virtualCamera.position.set(0, 30, 0);
-  // let vector = new THREE.Vector3(0, 1000, 0);
-  // virtualCamera.lookAt(vector);
-  // scene.add(virtualCamera);
-
-
-  // let videoTexture = new THREE.Texture(virtualCamera);
-  // const videoMaterial = new THREE.MeshBasicMaterial({
-  //   map: videoTexture,
-  //   overdraw: true,
-  //   side: THREE.DoubleSide,
-  // });
-
-
-  const water = new THREE.Mesh(geometryW, materialW);
-
-  //——————————————————————————————————————————D
-  // materialArray.mapping = THREE.CubeRefractionMapping;
-  // const videoMaterial = new THREE.MeshLambertMaterial( { color: 'white', envMap: materialArray } );
-
-
-  // const water = new THREE.Mesh(geometryW, videoMaterial);
-
-
-  water.position.set(-20,0,50);
-  scene.add(water);
-  water.rotation.y = -300;
+  // water.rotation.x = - Math.PI / 2;
   water.rotateX( - Math.PI / 2);
+  water.position.set(-120,3,50);
+  scene.add( water );
+
+
 
   //picture on plane
 
@@ -158,7 +142,11 @@ export function updateEnvironment(scene) {
   skybox.rotateX(Math.PI / 80000);
   skybox.rotateZ(Math.PI / 80000);
 
-//   myMesh.position.y += 0.005;
+  // for ( let i = 0; i < water.geometry.attributes.position.count; i ++ ) {
 
+  //   const y = 350 * Math.sin( i / 2 );
+  //   water.geometry.attributes.position.setY( i, y );
+
+  // }
 }
 
