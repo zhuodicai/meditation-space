@@ -1,7 +1,9 @@
 import * as THREE from 'three';
 import { Water } from 'three/examples/jsm/objects/Water.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
-// let tree;
+
+let tree;
 let skybox;
 let water;
 
@@ -44,31 +46,31 @@ export function createEnvironment(scene) {
 
 
   //tree
-  // GLTFloader.load(
-  //   '../assets/tree.gltf',
-  //   function ( gltf ) {
-  //     console.log('haha', gltf.scene);
-  //     gltf.scene.scale.multiplyScalar(1/500);
-  //   for(let x=-10; x<10; x++)
-  //   for(let z=-10; z<10; z++) {
-  //     if(x*x+z*z > 100){
-  //     continue;
-  //     }
-  //      tree =
-  //      gltf.scene.clone();
-  //      tree.position.set(x+Math.random()*100, Math.random(), z+Math.random()*100);
-  //      tree.rotation.y = Math.PI * 2 *Math.random();
-  //      scene.add( tree );
-  //   }
-  //     console.log("in");
-  //   },
-  //   function ( xhr ) {
-  //     console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
-  //   },
-  //   function ( error ) {
-  //     console.log( 'An error happened', error );
-  //   }
-  // );
+  new GLTFLoader().load(
+    '../assets/tree.gltf',
+    function ( gltf ) {
+      console.log('haha', gltf.scene);
+      gltf.scene.scale.multiplyScalar(1/30);
+    for(let x=-20; x<0; x=x+5)
+    for(let z=-20; z<0; z=z+5) {
+      if(x*x+z*z > 400){
+      continue;
+      }
+       tree =
+       gltf.scene.clone();
+       tree.position.set(x+Math.random()*100, -6, z+Math.random()*100);
+       tree.rotation.y = Math.PI * 2 *Math.random();
+       scene.add( tree );
+    }
+      console.log('tree is in');
+    },
+    function ( xhr ) {
+      console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+    },
+    function ( error ) {
+      console.log( 'An error happened', error );
+    }
+  );
 
   
 
@@ -112,7 +114,7 @@ export function createEnvironment(scene) {
       } ),
       // sunDirection: new THREE.Vector3(),
       sunColor: 'white',
-      waterColor: 0x001e0f,
+      waterColor: 0x00000c,
       // waterColor: 'white',
       distortionScale: 0,
       fog: scene.fog !== undefined,
@@ -125,7 +127,7 @@ export function createEnvironment(scene) {
   
   // water.rotation.x = - Math.PI / 2;
   water.rotateX( - Math.PI / 2);
-  water.position.set(-120,3,50);
+  water.position.set(-120,-5,50);
   scene.add( water );
 
 
@@ -148,5 +150,6 @@ export function updateEnvironment(scene) {
   //   water.geometry.attributes.position.setY( i, y );
 
   // }
+  
 }
 

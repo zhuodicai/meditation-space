@@ -19,6 +19,7 @@ class Scene extends EventEmitter {
 
     // guard against multiple binds
     this.audioBinded = false;
+    this.playing = false;
 
     //THREE scene
     this.scene = new THREE.Scene();
@@ -64,28 +65,42 @@ class Scene extends EventEmitter {
 
     //Setup event listeners for events and handle the states
     window.addEventListener('resize', e => this.onWindowResize(e), false);
-    window.addEventListener('keydown', e => this.onKeyDown(e), false);
+    // window.addEventListener('keydown', e => this.onKeyDown(e), false);
     domElement.addEventListener('mouseenter', e => this.onEnterCanvas(e), false);
     domElement.addEventListener('mouseleave', e => this.onLeaveCanvas(e), false);
     
 
     // Add external media to <audio> tag in HTML
     document.addEventListener('keydown', (event) => {
-      this.addExternalMedia();
+      this.bindSounds();
+
+      let moveKeys = ['w','a','s','d'];
+      if(!moveKeys.includes(event.key))
+        return;
+      let waterAudio = document.getElementById( 'waterAudio' );
+      if(waterAudio.paused) 
+        waterAudio.play();
+    });
+
+    document.addEventListener('keyup', (event) => {
+      let moveKeys = ['w','a','s','d'];
+      if(!moveKeys.includes(event.key))
+        return;
+      let waterAudio = document.getElementById( 'waterAudio' );
+      if(!waterAudio.paused && waterAudio.currentTime != 0){
+        waterAudio.currentTime = 0;
+        waterAudio.play();
+      } else{
+        waterAudio.pause();
+        waterAudio.currentTime = 0;
+      }
+        
     });
 
     document.addEventListener('mousedown', (event) => {
-      this.addExternalMedia();
+      this.bindSounds();
     });
 
-    
-    document.addEventListener('keydown', (event) => {
-      let keyPress = ['w','a','s','d'];
-      if(keyPress.includes(event.key)){
-        console.log(event);
-        this.addWaterSound();
-      } 
-    });
 
     
     // Helpers
@@ -129,30 +144,37 @@ class Scene extends EventEmitter {
     console.log('hey light is on');
   }
 
-  addExternalMedia(){
+  bindSounds(){
     if(this.audioBinded)
       return;
+    this.audioBinded = true;
     this.listener = new THREE.AudioListener();
     this.scene.add(this.listener);
-    let space = new THREE.PositionalAudio( this.listener );
-    let songElement = document.getElementById( 'envAudio' );
-    space.setMediaElementSource( songElement );
-    space.setRefDistance( 1 );
-    songElement.play();
-    this.scene.add(space);
-    this.audioBinded = true;
+
+    let envSource = new THREE.PositionalAudio( this.listener );
+    let envAudio = document.getElementById( 'envAudio' );
+    envSource.setMediaElementSource( envAudio );
+    envSource.setRefDistance( 1 );
+    this.scene.add(envSource);
+    envAudio.play();
+
+    let waterSource = new THREE.PositionalAudio( this.listener );
+    let waterAudio = document.getElementById( 'waterAudio' );
+    waterSource.setMediaElementSource(waterAudio);
+    waterSource.setRefDistance(1);
+    this.scene.add(waterSource);
   }
 
-  addWaterSound(){
-    this.listener = new THREE.AudioListener();
-    this.scene.add(this.listener);
-    water = new THREE.PositionalAudio( this.listener );
-    let songElement = document.getElementById( 'waterAudio' );
-    water.setMediaElementSource( songElement );
-    water.setRefDistance( 1 );
-    songElement.play();
-    this.scene.add(water);
-  }
+  // addWaterSound(){
+  //   this.listener = new THREE.AudioListener();
+  //   this.scene.add(this.listener);
+  //   water = new THREE.PositionalAudio( this.listener );
+  //   let songElement = document.getElementById( 'waterAudio' );
+  //   water.setMediaElementSource( songElement );
+  //   water.setRefDistance( 1 );
+  //   songElement.play();
+  //   this.scene.add(water);
+  // }
 
 
   //notice: update() includes render()!
