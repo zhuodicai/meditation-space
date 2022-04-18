@@ -6,7 +6,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 let tree;
 let skybox;
 let water;
-
+let moon;
 
 export function createEnvironment(scene) {
   console.log('Adding environment');
@@ -58,7 +58,7 @@ export function createEnvironment(scene) {
       }
        tree =
        gltf.scene.clone();
-       tree.position.set(x+Math.random()*100, -6, z+Math.random()*100);
+       tree.position.set(x+Math.random()*100, -8, z+Math.random()*100);
        tree.rotation.y = Math.PI * 2 *Math.random();
        scene.add( tree );
     }
@@ -92,14 +92,13 @@ export function createEnvironment(scene) {
 
   for (let i = 0; i < 6; i++)
   materialArray[i].side = THREE.BackSide;
-  const skyboxGeo = new THREE.BoxGeometry(1000, 1000, 1000);
+  const skyboxGeo = new THREE.BoxGeometry(1500, 1500, 1500);
   skybox = new THREE.Mesh(skyboxGeo,materialArray);
   scene.add(skybox);
 
 
 
   // water
-
   const waterGeometry = new THREE.PlaneGeometry( 800, 800, 64,64 );
 
   water = new Water(
@@ -134,7 +133,22 @@ export function createEnvironment(scene) {
 
   //picture on plane
 
-
+  //moon
+  const geometryM = new THREE.SphereGeometry( 50, 32, 16 );
+  // const materialM = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+  const loaderM = new THREE.TextureLoader();
+  const textureM = loaderM.load('assets/moon.jpeg');
+  const materialM = new THREE.MeshStandardMaterial({
+  // color:'gray',
+  // color:'rgb(22,24,31)',
+  color:0xffffff,
+  side: THREE.DoubleSide,
+  map: textureM,
+  emissive: textureM
+  });
+  moon = new THREE.Mesh( geometryM, materialM );
+  moon.position.set(-50, -5, -200);
+  scene.add( moon );
 }
 
 
@@ -143,6 +157,8 @@ export function updateEnvironment(scene) {
   skybox.rotateY(Math.PI / 80000);
   skybox.rotateX(Math.PI / 80000);
   skybox.rotateZ(Math.PI / 80000);
+
+  moon.rotateZ(Math.PI / 80000);
 
   // for ( let i = 0; i < water.geometry.attributes.position.count; i ++ ) {
 

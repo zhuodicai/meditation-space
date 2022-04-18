@@ -6,7 +6,6 @@ import EventEmitter from 'event-emitter-es6';
 import {createEnvironment,updateEnvironment} from './environment';
 
 
-let water;
 class Scene extends EventEmitter {
   constructor(domElement = document.getElementById('gl_context'),
               _width = window.innerWidth,
@@ -74,19 +73,21 @@ class Scene extends EventEmitter {
     document.addEventListener('keydown', (event) => {
       this.bindSounds();
 
-      let moveKeys = ['w','a','s','d'];
+      let moveKeys = ['w','a','s','d','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'];
       if(!moveKeys.includes(event.key))
         return;
       let waterAudio = document.getElementById( 'waterAudio' );
       if(waterAudio.paused) 
+        waterAudio.volume = Math.random(0.2);
         waterAudio.play();
     });
 
     document.addEventListener('keyup', (event) => {
-      let moveKeys = ['w','a','s','d'];
+      let moveKeys = ['w','a','s','d','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'];
       if(!moveKeys.includes(event.key))
         return;
       let waterAudio = document.getElementById( 'waterAudio' );
+      
       if(!waterAudio.paused && waterAudio.currentTime != 0){
         waterAudio.currentTime = 0;
         waterAudio.play();
@@ -99,7 +100,26 @@ class Scene extends EventEmitter {
 
     document.addEventListener('mousedown', (event) => {
       this.bindSounds();
+      let waterAudio = document.getElementById( 'waterAudio' );
+      if(waterAudio.paused) 
+        waterAudio.volume = Math.random(0.2);
+        // console.log(waterAudio.volume);
+        waterAudio.play();
+        waterAudio.loop = true;
     });
+
+    document.addEventListener('mouseup', (event) => {
+      let waterAudio = document.getElementById( 'waterAudio' );
+      waterAudio.loop = false;
+      if(!waterAudio.paused && waterAudio.currentTime != 0){
+        waterAudio.currentTime = 0;
+        waterAudio.play();
+      } else{
+        waterAudio.pause();
+        waterAudio.currentTime = 0;
+      }
+    });
+   
 
 
     
@@ -164,17 +184,6 @@ class Scene extends EventEmitter {
     waterSource.setRefDistance(1);
     this.scene.add(waterSource);
   }
-
-  // addWaterSound(){
-  //   this.listener = new THREE.AudioListener();
-  //   this.scene.add(this.listener);
-  //   water = new THREE.PositionalAudio( this.listener );
-  //   let songElement = document.getElementById( 'waterAudio' );
-  //   water.setMediaElementSource( songElement );
-  //   water.setRefDistance( 1 );
-  //   songElement.play();
-  //   this.scene.add(water);
-  // }
 
 
   //notice: update() includes render()!
