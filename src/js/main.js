@@ -25,12 +25,21 @@ socket.on('introduction', (_id, _clientNum, _ids)=>{
       clients[_ids[i]] = {
         mesh: new THREE.Mesh(
           new THREE.BoxGeometry(1,1,1),
-          new THREE.MeshNormalMaterial()
+          // new THREE.MeshNormalMaterial()
+          // new THREE.PlaneBufferGeometry(11.8,10,10,10),
+          // new THREE.MeshBasicMaterial({
+          //   map:new THREE.TextureLoader().load('assets/character.png'),
+          //   side: THREE.DoubleSide,
+          //   transparent: true,
+          //   depthTest: true,
+          //   depthWrite: false
+          // })
         )
       };
 
       //Add initial users to the scene
       glScene.scene.add(clients[_ids[i]].mesh);
+      
     }
   }
 
@@ -56,12 +65,21 @@ socket.on('newUserConnected', (clientCount, _id, _ids)=>{
     clients[_id] = {
       mesh: new THREE.Mesh(
         new THREE.BoxGeometry(1,1,1),
-        new THREE.MeshNormalMaterial()
+        // new THREE.MeshNormalMaterial()
+        // new THREE.PlaneBufferGeometry(11.8,10,10,10),
+        // new THREE.MeshBasicMaterial({
+        //   map:new THREE.TextureLoader().load('assets/character.png'),
+        //   side: THREE.DoubleSide,
+        //   transparent: true,
+        //   depthTest: true,
+        //   depthWrite: false
+        // })
       )
     };
-
+    
     //Add initial users to the scene
     glScene.scene.add(clients[_id].mesh);
+    
   }
 
 });

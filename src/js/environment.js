@@ -7,6 +7,7 @@ let tree;
 let skybox;
 let water;
 let moon;
+let board1,board2,board3;
 
 export function createEnvironment(scene) {
   console.log('Adding environment');
@@ -130,8 +131,14 @@ export function createEnvironment(scene) {
   scene.add( water );
 
 
-
-  //picture on plane
+  //moon ground
+  const geometryG = new THREE.CircleGeometry( 48, 32 );
+  const materialG = new THREE.MeshBasicMaterial( {color: 'rgb(0,0,0)',transparent: true,  opacity: 0.3} );
+  const circleG = new THREE.Mesh( geometryG, materialG );
+  circleG.rotateX( - Math.PI / 2);
+  circleG.visible = true;
+  circleG.position.set(-50, -4.9, -200);
+  scene.add( circleG );
 
   //moon
   const geometryM = new THREE.SphereGeometry( 50, 32, 16 );
@@ -149,7 +156,72 @@ export function createEnvironment(scene) {
   moon = new THREE.Mesh( geometryM, materialM );
   moon.position.set(-50, -5, -200);
   scene.add( moon );
+
+
+
+  //intro in moon
+  //😊board1
+  var boardWidth1 = 8.13*1.5; // 画布的宽度
+  var boardHeight1 = 10*1.5; // 画布的高度
+  var boardTexture1 = new THREE.TextureLoader().load('assets/board1.jpeg');
+  var boardGeometry1 = new THREE.PlaneGeometry( boardWidth1, boardHeight1);
+  var boardMaterial1 = new THREE.MeshBasicMaterial({
+      map: boardTexture1,
+      side: THREE.DoubleSide,
+      transparent: true,
+      depthTest: true,  //是否被遮挡？
+      depthWrite: true,  //没懂区别:)
+      // opacity: 0.1,
+  });
+
+  board1 = new THREE.Mesh(boardGeometry1, boardMaterial1);
+  board1.position.set(-90, 10, -200);
+  board1.rotateY(Math.PI / 2.5);
+  board1.visible = true;
+  scene.add(board1);
+
+  //😊board2
+  var boardWidth2 = 17.97*1.5; // 画布的宽度
+  var boardHeight2 = 10*1.5; // 画布的高度
+  var boardTexture2 = new THREE.TextureLoader().load('assets/board2.jpeg');
+  var boardGeometry2 = new THREE.PlaneGeometry( boardWidth2, boardHeight2);
+  var boardMaterial2 = new THREE.MeshBasicMaterial({
+      map: boardTexture2,
+      side: THREE.DoubleSide,
+      transparent: true,
+      depthTest: true,  //是否被遮挡？
+      depthWrite: true,  //没懂区别:)
+      // opacity: 0.1,
+  });
+
+  board2 = new THREE.Mesh(boardGeometry2, boardMaterial2);
+  board2.position.set(-50, 10, -240);
+  // board2.rotateY(Math.PI);
+  board2.visible = true;
+  scene.add(board2);
+
+  //😊board3
+  var boardWidth3 = 11.86*1.5; // 画布的宽度
+  var boardHeight3 = 10*1.5; // 画布的高度
+  var boardTexture3 = new THREE.TextureLoader().load('assets/board3.jpeg');
+  var boardGeometry3 = new THREE.PlaneGeometry( boardWidth3, boardHeight3);
+  var boardMaterial3 = new THREE.MeshBasicMaterial({
+      map: boardTexture3,
+      side: THREE.DoubleSide,
+      transparent: true,
+      depthTest: true,  //是否被遮挡？
+      depthWrite: true,  //没懂区别:)
+      // opacity: 0.1,
+  });
+
+  board3 = new THREE.Mesh(boardGeometry3, boardMaterial3);
+  board3.position.set(-10, 10, -200);
+  board3.rotateY( -Math.PI / 2.5);
+  board3.visible = true;
+  scene.add(board3);
+
 }
+
 
 
 // eslint-disable-next-line

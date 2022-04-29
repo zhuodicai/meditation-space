@@ -54,7 +54,7 @@ class Scene extends EventEmitter {
     if(hasControls){
       this.controls = new FirstPersonControls(this.camera, this.renderer.domElement);
       this.controls.lookSpeed = 0.01;
-      this.controls.movementSpeed = 15;
+      this.controls.movementSpeed = 65;
       this.controls.activeLook = true;
       // if(this.controls.mouseDragOn == true){
       //   this.controls.activeLook = true;
@@ -64,7 +64,7 @@ class Scene extends EventEmitter {
 
     //Setup event listeners for events and handle the states
     window.addEventListener('resize', e => this.onWindowResize(e), false);
-    // window.addEventListener('keydown', e => this.onKeyDown(e), false);
+    window.addEventListener('keydown', e => this.onKeyDown(e), false);
     domElement.addEventListener('mouseenter', e => this.onEnterCanvas(e), false);
     domElement.addEventListener('mouseleave', e => this.onLeaveCanvas(e), false);
     
