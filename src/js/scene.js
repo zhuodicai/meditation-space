@@ -54,7 +54,7 @@ class Scene extends EventEmitter {
     if(hasControls){
       this.controls = new FirstPersonControls(this.camera, this.renderer.domElement);
       this.controls.lookSpeed = 0.01;
-      this.controls.movementSpeed = 65;
+      this.controls.movementSpeed = 50;
       this.controls.activeLook = true;
       // if(this.controls.mouseDragOn == true){
       //   this.controls.activeLook = true;
