@@ -25,6 +25,8 @@ socket.on('introduction', (_id, _clientNum, _ids)=>{
       clients[_ids[i]] = {
         mesh: new THREE.Mesh(
           new THREE.BoxGeometry(1,1,1),
+          // new THREE.IcosahedronGeometry({radius : 1, detail :1}),
+          new THREE.MeshBasicMaterial( { color: 0x7bb1ff, wireframe: true } )
           // new THREE.MeshNormalMaterial()
           // new THREE.PlaneBufferGeometry(11.8,10,10,10),
           // new THREE.MeshBasicMaterial({
@@ -65,7 +67,8 @@ socket.on('newUserConnected', (clientCount, _id, _ids)=>{
     clients[_id] = {
       mesh: new THREE.Mesh(
         new THREE.BoxGeometry(1,1,1),
-        // new THREE.MeshNormalMaterial()
+        // new THREE.IcosahedronGeometry({radius : 1, detail :1}),
+        new THREE.MeshBasicMaterial( { color: 0x7bb1ff, wireframe: true } )
         // new THREE.PlaneBufferGeometry(11.8,10,10,10),
         // new THREE.MeshBasicMaterial({
         //   map:new THREE.TextureLoader().load('assets/character.png'),
