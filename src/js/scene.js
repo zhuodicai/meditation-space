@@ -150,7 +150,7 @@ class Scene extends EventEmitter {
     this.scene.add(new THREE.AmbientLight(0xffffe6, 0.9));
     
     let dirLight1 = new THREE.DirectionalLight( 0xffffff,0.1 );
-		dirLight1.position.set( -3, 0, 3 ).normalize();
+		dirLight1.position.set( -3, 0, 3.5 ).normalize();
 		this.scene.add( dirLight1 );
 
     let dirLight2 = new THREE.DirectionalLight( 0xffffff,0.1 );
