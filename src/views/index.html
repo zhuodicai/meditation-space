@@ -1,34 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Meditation Space</title>
+    <title>Test-1</title>
     <module href="/components/head.html"></module>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js" integrity="sha512-MgkNs0gNdrnOM7k+0L+wgiRc5aLgl74sJQKbIWegVIMvVGPc1+gc1L2oK9Wf/D9pq58eqIJAxOonYPVE5UwUFA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   </head>
   
-  <body style="background: black; margin: 0; padding: 0;height:100%; width:100%;">
+  <body style="background: rgb(0, 0, 0); margin: 0; padding: 0;height:100%; width:100%;">
+
     <!-- ⬇️ i'm bundle.js for no framework template, please do not ever delete me! -->
     <script src="bundle.js" defer async></script> 
+      
 
-    <div>
-        <img class="imgIntro" src="assets/intro.png" alt="introduction">
-    </div>
+
+    <!-- WebGL context -->
+    <div id="gl_context"></div>
+
+    <!-- Audio Element-->
+    <!-- <audio loop controls id="myAudio"> -->
+    <audio loop id="envAudio">
+      <source src="assets/birthday.mp3" type="audio/mp3">
+    </audio>
+    <!-- <audio id="waterAudio">
+      <source src="assets/water.mp3" type="audio/mp3">
+    </audio> -->
     
-    <div class="menu">
-        <div class="label">Menu</div>
-        <div class="spacer"></div>
-        <!-- <div class="item"><span><a href="intro.html">Introduction</a></span></div>
-        <div class="item"><span><a href="index.html">Space</a></span></div> -->
-        <div class="item"><span><a href="index.html">Introduction</a></span></div>
-        <div class="item"><span><a href="spacecode.html">Space</a></span></div>
-    </div>
-
-    <div class="copyright">
-      Copyright @ 2022, ITP NYU
-    </div>
+    <!-- Video Element-->
+    <!-- <video id="myVideo" loop crossOrigin="anonymous" playsinline style="display:note">
+      <source src="assets/xxx.mp4" type='"video/mp4"; codecs="avc1.42E01E, mp4a.40.2"'>
+    </video>> -->
   
+    <!-- Picture Element-->
+    <!-- <img id="myPicture" src="assets/star.gif" /> -->
 
-  
+    <!-- <div class="copyright">
+      ■direction:  W↑(or hold right mouse button) | A← | S↓ | D→ ■up and down: R | F ■view: move cursor
+    </div> -->
+
+
   </body>
 
 </html>

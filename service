@@ -1,0 +1,8 @@
+[Unit]
+Description=Meditation Space service
+
+[Service]
+User=czd
+WorkingDirectory=/mnt/drive/home/czd/meditation
+ExecStart=npm run start
+Restart=always
