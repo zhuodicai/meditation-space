@@ -94,7 +94,6 @@ export function createEnvironment(scene) {
   // scene.add(line)
 
   //tree
-<<<<<<< Updated upstream
   // new GLTFLoader().load(
   //   'assets/tree.gltf',
   //   function ( gltf ) {
@@ -120,33 +119,6 @@ export function createEnvironment(scene) {
   //     console.log( 'An error happened', error );
   //   }
   // );
-=======
-  new GLTFLoader().load(
-    'assets/tree.gltf',
-    function ( gltf ) {
-      console.log('haha', gltf.scene);
-      gltf.scene.scale.multiplyScalar(1/30);
-    for(let x=-20; x<0; x=x+5)
-    for(let z=-20; z<0; z=z+5) {
-      if(x*x+z*z > 400){
-      continue;
-      }
-       tree =
-       gltf.scene.clone();
-       tree.position.set(x+Math.random()*100, -8, z+Math.random()*100);
-       tree.rotation.y = Math.PI * 2 *Math.random();
-       scene.add( tree );
-    }
-      console.log('tree is in');
-    },
-    function ( xhr ) {
-      console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
-    },
-    function ( error ) {
-      console.log( 'An error happened', error );
-    }
-  );
->>>>>>> Stashed changes
 
   
 
