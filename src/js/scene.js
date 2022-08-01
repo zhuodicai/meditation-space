@@ -1,8 +1,7 @@
 /* eslint-disable no-unused-vars */
 
 import * as THREE from 'three';
-// import {FirstPersonControls} from 'three/examples/jsm/controls/FirstPersonControls';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import {FirstPersonControls} from 'three/examples/jsm/controls/FirstPersonControls';
 import EventEmitter from 'event-emitter-es6';
 import {createEnvironment,updateEnvironment} from './environment';
 
@@ -23,8 +22,6 @@ class Scene extends EventEmitter {
 
     //THREE scene
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color( 0x72645b );
-    this.scene.fog = new THREE.Fog( 0x72645b, 1, 500 );
 
     //Utility
     this.width = _width;
@@ -37,7 +34,7 @@ class Scene extends EventEmitter {
       0.1,
       5000
     );
-    this.camera.position.set(0, 0, 300);
+    this.camera.position.set(0, 5, 80);
     this.scene.add(this.camera);
 
     // create an AudioListener and add it to the camera
@@ -55,30 +52,15 @@ class Scene extends EventEmitter {
     domElement.append(this.renderer.domElement);
 
     if(hasControls){
-      //FirstPersonControls
-      // this.controls = new FirstPersonControls(this.camera, this.renderer.domElement);
-      // this.controls.lookSpeed = 0.01;
-      // this.controls.movementSpeed = 50;
-      // this.controls.activeLook = true;
+      this.controls = new FirstPersonControls(this.camera, this.renderer.domElement);
+      this.controls.lookSpeed = 0.01;
+      this.controls.movementSpeed = 50;
+      this.controls.activeLook = true;
       // if(this.controls.mouseDragOn == true){
       //   this.controls.activeLook = true;
       // }
-    
-      //OrbitControls
-      this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-      this.controls.enableDamping = true;
+      
     }
-
-
-    //Raycaster
-    this.raycaster = new THREE.Raycaster();
-    this.pointer = new THREE.Vector2();
-    window.addEventListener('pointermove', (event) => {
-      this.pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-      this.pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-    });
-
-
 
     //Setup event listeners for events and handle the states
     window.addEventListener('resize', e => this.onWindowResize(e), false);
@@ -142,8 +124,8 @@ class Scene extends EventEmitter {
 
     
     // Helpers
-    this.scene.add(new THREE.GridHelper(1000, 1000));
-    this.scene.add(new THREE.AxesHelper(10));
+    // this.scene.add(new THREE.GridHelper(1000, 1000));
+    // this.scene.add(new THREE.AxesHelper(10));
   
     this.clock = new THREE.Clock();
 
@@ -153,7 +135,6 @@ class Scene extends EventEmitter {
     
     this.update();
   }
-
 
   drawUsers(positions, id){
     for(let i = 0; i < Object.keys(positions).length; i++){
@@ -166,24 +147,23 @@ class Scene extends EventEmitter {
   }
 
   addLights() {
-    // this.scene.add(new THREE.AmbientLight(0xffffe6, 0.9));
+    this.scene.add(new THREE.AmbientLight(0xffffe6, 0.9));
     
-    // let dirLight1 = new THREE.DirectionalLight( 0xffffff,0.1 );
-		// dirLight1.position.set( -3, 0, 3.5 ).normalize();
-		// this.scene.add( dirLight1 );
+    let dirLight1 = new THREE.DirectionalLight( 0xffffff,0.1 );
+		dirLight1.position.set( -3, 0, 3.5 ).normalize();
+		this.scene.add( dirLight1 );
 
-    // let dirLight2 = new THREE.DirectionalLight( 0xffffff,0.1 );
-		// dirLight2.position.set( 10, 0, -10 ).normalize();
-		// this.scene.add( dirLight2 );
+    let dirLight2 = new THREE.DirectionalLight( 0xffffff,0.1 );
+		dirLight2.position.set( 10, 0, -10 ).normalize();
+		this.scene.add( dirLight2 );
 
-    // let dirLight3 = new THREE.DirectionalLight( 0xffffff,0.1 );
-		// dirLight3.position.set( -23, -0.5, -23 ).normalize();
-		// this.scene.add( dirLight3 );
+    let dirLight3 = new THREE.DirectionalLight( 0xffffff,0.1 );
+		dirLight3.position.set( -23, -0.5, -23 ).normalize();
+		this.scene.add( dirLight3 );
 
     console.log('hey light is on');
   }
 
-  
   bindSounds(){
     if(this.audioBinded)
       return;
@@ -198,11 +178,11 @@ class Scene extends EventEmitter {
     this.scene.add(envSource);
     envAudio.play();
 
-    // let waterSource = new THREE.PositionalAudio( this.listener );
-    // let waterAudio = document.getElementById( 'waterAudio' );
-    // waterSource.setMediaElementSource(waterAudio);
-    // waterSource.setRefDistance(1);
-    // this.scene.add(waterSource);
+    let waterSource = new THREE.PositionalAudio( this.listener );
+    let waterAudio = document.getElementById( 'waterAudio' );
+    waterSource.setMediaElementSource(waterAudio);
+    waterSource.setRefDistance(1);
+    this.scene.add(waterSource);
   }
 
 
@@ -211,22 +191,11 @@ class Scene extends EventEmitter {
     updateEnvironment();
     requestAnimationFrame(() => this.update());
     this.controls.update(this.clock.getDelta());
-    this.controls.target = new THREE.Vector3(0, 0, 0);
+    this.controls.target = new THREE.Vector3(0,0,0);
     this.render();
   }
 
   render() {
-    // update the picking ray with the camera and pointer position
-    this.raycaster.setFromCamera( this.pointer, this.camera );
-
-    // calculate objects intersecting the picking ray
-    const intersects = this.raycaster.intersectObjects( this.scene.children );
-
-    for ( let i = 0; i < intersects.length; i ++ ) {
-
-      intersects[ i ].object.material.color.set( 0xff0000 );
-
-    }
     this.renderer.render(this.scene, this.camera);
   }
 
